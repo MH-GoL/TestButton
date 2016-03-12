@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
                 tTcp.start();
                 Log.d("TEST_THREAD", "started");
 
-                textView.setText("");
+                textView.setText("Regal an");
             }
         });
 
@@ -96,7 +96,7 @@ public class MainActivity extends Activity {
                 tTcp.start();
                 Log.d("TEST_THREAD", "started");
 
-                textView.setText("");
+                textView.setText("Tisch an");
             }
         });
 
@@ -123,7 +123,7 @@ public class MainActivity extends Activity {
                 tTcp.start();
                 Log.d("TEST_THREAD", "started");
 
-                textView.setText("");
+                textView.setText("Bett an");
             }
         });
 
@@ -152,7 +152,7 @@ public class MainActivity extends Activity {
                 tTcp.start();
                 Log.d("TEST_THREAD", "started");
 
-                textView.setText("");
+                textView.setText("Alle an");
             }
         });
 
@@ -181,7 +181,7 @@ public class MainActivity extends Activity {
                 tTcp.start();
                 Log.d("TEST_THREAD", "started");
 
-                textView.setText("");
+                textView.setText("Sunrise ... Wake up");
             }
         });
 
