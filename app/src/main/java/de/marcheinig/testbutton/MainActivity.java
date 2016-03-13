@@ -49,7 +49,6 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
-                textView.setText("Regal an");
             }
         });
 
@@ -58,7 +57,6 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
-                textView.setText("Tisch an");
             }
         });
 
@@ -67,19 +65,15 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
-                textView.setText("Bett an");
             }
         });
 
         buttonAlle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
-
-                textView.setText("Alle an");
             }
         });
 
@@ -87,10 +81,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Test-Button-gedrückt");
-
                 sendColor(255, 255, 255, "ledtisch.fritz.box");
 
-                textView.setText("Test");
             }
         });
 
@@ -203,7 +195,7 @@ public class MainActivity extends Activity {
         }
 
         public int getPort() {
-            return port;
+            return this.port;
         }
     }
 
@@ -223,11 +215,6 @@ public class MainActivity extends Activity {
             this.gColor = g;
             this.bColor = b;
 
-        }
-
-        public int[] getRGB() {
-            int[] color = {this.rColor, this.gColor, this.bColor};
-            return color;
         }
 
         public int getRedValue() {
@@ -270,42 +257,36 @@ public class MainActivity extends Activity {
         @Override
         protected LedController doInBackground(LedController... ledController) {
             Socket mSocket;
-            BufferedReader mBufferedReader;
+            //BufferedReader mBufferedReader;
             BufferedWriter mBufferedWriter;
             Log.d("doInBackground", "gestartet");
 
             try {
-                mSocket = new Socket(ledController[0].getHost(), 80);
+                mSocket = new Socket(ledController[0].getHost(), ledController[0].getPort());
 
-                if (mSocket != null) {
-                    mBufferedReader = new BufferedReader(
-                            new InputStreamReader(mSocket.getInputStream())
-                    );
 
-                    mBufferedWriter = new BufferedWriter(
-                            new OutputStreamWriter((mSocket.getOutputStream()))
-                    );
-                    mBufferedWriter.write("GET /rgb?r=" + ledController[0].getRedValue() + "&g=" + ledController[0].getGreenValue() + "&b=" + ledController[0].getBlueValue() + " HTTP/1.1\r\n\r\n");
-                    mBufferedWriter.flush();
-                    if (mSocket != null) {
-                        mSocket.close();
-                        mSocket = null;
-                    }
-                    publishProgress(10, 10);
-                }
+                //mBufferedReader = new BufferedReader(
+                //        new InputStreamReader(mSocket.getInputStream())
+                //);
+
+                mBufferedWriter = new BufferedWriter(
+                        new OutputStreamWriter((mSocket.getOutputStream()))
+                );
+                mBufferedWriter.write("GET /rgb?r=" + ledController[0].getRedValue() + "&g=" + ledController[0].getGreenValue() + "&b=" + ledController[0].getBlueValue() + " HTTP/1.1\r\n\r\n");
+                mBufferedWriter.flush();
+                mSocket.close();
+                publishProgress(10, 10);
+
             } catch (UnknownHostException e) {
                 Log.d(ledController[0].getHost() + "-UhE", e.getMessage());
-                mSocket = null;
                 ledController[0].setStatus(-1);
                 return ledController[0];
             } catch (IOException e) {
                 Log.d(ledController[0].getHost() + "-IoE", e.getMessage());
-                mSocket = null;
                 ledController[0].setStatus(-2);
                 return ledController[0];
             } catch (NullPointerException e) {
                 Log.d(ledController[0].getHost() + "-NpE", e.getMessage());
-                mSocket = null;
                 ledController[0].setStatus(-3);
                 return ledController[0];
             }
