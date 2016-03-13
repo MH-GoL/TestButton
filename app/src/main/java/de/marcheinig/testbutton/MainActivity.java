@@ -1,7 +1,6 @@
 package de.marcheinig.testbutton;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,10 +25,6 @@ import java.net.UnknownHostException;
 
 public class MainActivity extends Activity {
 
-    private Socket mSocket;
-    private volatile BufferedReader mBufferedReader;
-    private BufferedWriter mBufferedWriter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,26 +48,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
-
-                Runnable rTcp = new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d("TEST_RUNNABLE", "started");
-                        sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mainLayout.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                            }
-                        });
-                        //return;
-                    }
-                };
-
-                Thread tTcp = new Thread(rTcp);
-                tTcp.start();
-                Log.d("TEST_THREAD", "started");
-
+                sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
                 textView.setText("Regal an");
             }
         });
@@ -81,25 +57,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
-
-                Runnable rTcp = new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d("TEST_RUNNABLE", "started");
-                        sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mainLayout.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                            }
-                        });
-                    }
-                };
-
-                Thread tTcp = new Thread(rTcp);
-                tTcp.start();
-                Log.d("TEST_THREAD", "started");
-
+                sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
                 textView.setText("Tisch an");
             }
         });
@@ -108,25 +66,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
-
-                Runnable rTcp = new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d("TEST_RUNNABLE", "started");
-                        sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mainLayout.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                            }
-                        });
-                    }
-                };
-
-                Thread tTcp = new Thread(rTcp);
-                tTcp.start();
-                Log.d("TEST_THREAD", "started");
-
+                sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
                 textView.setText("Bett an");
             }
         });
@@ -244,40 +184,8 @@ public class MainActivity extends Activity {
 
     public boolean sendColor(int colorR, int colorG, int colorB, String server) {
         LedController ledController = new LedController(server, 80, colorR, colorG, colorB);
-        int status = 0;
-
         LedSocket ledTischSocket = new LedSocket();
-        ledTischSocket.execute(ledController);
-
-        return true;
-    }
-
-    public boolean sendSunrise(String Server) {
-        try {
-            mSocket = new Socket(Server, 80);
-
-            if (mSocket != null) {
-                mBufferedReader = new BufferedReader(
-                        new InputStreamReader(mSocket.getInputStream())
-                );
-
-                mBufferedWriter = new BufferedWriter(
-                        new OutputStreamWriter((mSocket.getOutputStream()))
-                );
-                mBufferedWriter.write("GET /sunrise HTTP/1.1\r\n\r\n");
-                mBufferedWriter.flush();
-                mSocket.close();
-                mSocket = null;
-            }
-        } catch (UnknownHostException e) {
-            Log.d("TCP", e.getMessage());
-            mSocket = null;
-            return false;
-        } catch (IOException e) {
-            Log.d("TCP", e.getMessage());
-            mSocket = null;
-            return false;
-        }
+        ledTischSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ledController);
         return true;
     }
 
@@ -352,12 +260,6 @@ public class MainActivity extends Activity {
     }
 
     public class LedSocket extends AsyncTask<LedController, Integer, LedController> {
-        private String host;
-        private int port;
-
-        private int rColor;
-        private int gColor;
-        private int bColor;
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
@@ -367,7 +269,9 @@ public class MainActivity extends Activity {
 
         @Override
         protected LedController doInBackground(LedController... ledController) {
-
+            Socket mSocket;
+            BufferedReader mBufferedReader;
+            BufferedWriter mBufferedWriter;
             Log.d("doInBackground", "gestartet");
 
             try {
@@ -383,19 +287,26 @@ public class MainActivity extends Activity {
                     );
                     mBufferedWriter.write("GET /rgb?r=" + ledController[0].getRedValue() + "&g=" + ledController[0].getGreenValue() + "&b=" + ledController[0].getBlueValue() + " HTTP/1.1\r\n\r\n");
                     mBufferedWriter.flush();
-                    mSocket.close();
-                    mSocket = null;
+                    if (mSocket != null) {
+                        mSocket.close();
+                        mSocket = null;
+                    }
                     publishProgress(10, 10);
                 }
             } catch (UnknownHostException e) {
-                Log.d("TCP", e.getMessage());
+                Log.d(ledController[0].getHost() + "-UhE", e.getMessage());
                 mSocket = null;
                 ledController[0].setStatus(-1);
                 return ledController[0];
             } catch (IOException e) {
-                Log.d("TCP", e.getMessage());
+                Log.d(ledController[0].getHost() + "-IoE", e.getMessage());
                 mSocket = null;
                 ledController[0].setStatus(-2);
+                return ledController[0];
+            } catch (NullPointerException e) {
+                Log.d(ledController[0].getHost() + "-NpE", e.getMessage());
+                mSocket = null;
+                ledController[0].setStatus(-3);
                 return ledController[0];
             }
             ledController[0].setStatus(1);
