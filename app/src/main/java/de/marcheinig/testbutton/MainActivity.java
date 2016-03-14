@@ -49,6 +49,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
+                buttonRegal.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+                buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
             }
         });
 
@@ -57,6 +59,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
+                buttonTisch.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+                buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
             }
         });
 
@@ -65,6 +69,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
+                buttonBett.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+                buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
             }
         });
 
@@ -74,6 +80,11 @@ public class MainActivity extends Activity {
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
                 sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
+
+                buttonRegal.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+                buttonTisch.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+                buttonBett.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+                buttonAlle.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
             }
         });
 
@@ -82,6 +93,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Test-Button-gedrückt");
                 sendColor(255, 255, 255, "ledtisch.fritz.box");
+                Log.d("SUNRISE", Integer.toString(R.id.buttonSunrise));
 
             }
         });
@@ -178,6 +190,12 @@ public class MainActivity extends Activity {
         LedController ledController = new LedController(server, 80, colorR, colorG, colorB);
         LedSocket ledTischSocket = new LedSocket();
         ledTischSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ledController);
+        return true;
+    }
+
+    public boolean setButtonBackgroundColor(int buttonId) {
+        final Button button = (Button) findViewById(buttonId);
+        //button.setBackgroundColor();
         return true;
     }
 
@@ -297,8 +315,11 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(LedController result) {
             Log.d("onPostExecute", result.toString());
-            if (result.getStatus() <= 0)
+            if (result.getStatus() <= 0) {
                 Toast.makeText(getApplicationContext(), "Controller \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
+            } else {
+
+            }
         }
     }
 }
