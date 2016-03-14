@@ -71,16 +71,22 @@
         android:text="@string/button_alle_text"
         android:id="@+id/buttonAlle"
         android:layout_below="@+id/buttonBett"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_sunrise_text"
         android:id="@+id/buttonSunrise"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/buttonAlle"
+        android:layout_below="@+id/buttonAlleAus"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_alleaus_text"
+        android:id="@+id/buttonAlleAus"
+        android:layout_below="@+id/buttonAlle"
+        android:layout_alignStart="@+id/buttonBett" />
 
 </RelativeLayout>

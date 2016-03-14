@@ -6,5 +6,6 @@
     <string name="button_tisch_text">Tisch</string>
     <string name="button_bett_text">Bett</string>
     <string name="button_alle_text">Alle</string>
+    <string name="button_alleaus_text">Alle aus</string>
     <string name="button_sunrise_text">Sonnenaufgang</string>
 </resources>

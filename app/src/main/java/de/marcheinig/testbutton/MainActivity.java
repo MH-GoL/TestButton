@@ -34,6 +34,7 @@ public class MainActivity extends Activity {
         final Button buttonTisch = (Button) findViewById(R.id.buttonTisch);
         final Button buttonBett = (Button) findViewById(R.id.buttonBett);
         final Button buttonAlle = (Button) findViewById(R.id.buttonAlle);
+        final Button buttonAlleAus = (Button) findViewById(R.id.buttonAlleAus);
         final Button buttonSunrise = (Button) findViewById(R.id.buttonSunrise);
 
         final TextView textView = (TextView) findViewById(R.id.textView);
@@ -85,6 +86,20 @@ public class MainActivity extends Activity {
                 buttonTisch.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
                 buttonBett.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
                 buttonAlle.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+            }
+        });
+
+        buttonAlleAus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendColor(0, 0, 0, "ledregal.fritz.box");
+                sendColor(0, 0, 0, "ledtisch.fritz.box");
+                sendColor(0, 0, 0, "ledbett.fritz.box");
+
+                buttonRegal.setBackgroundColor(Color.rgb(0, 0, 0));
+                buttonTisch.setBackgroundColor(Color.rgb(0, 0, 0));
+                buttonBett.setBackgroundColor(Color.rgb(0, 0, 0));
+                buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
             }
         });
 
