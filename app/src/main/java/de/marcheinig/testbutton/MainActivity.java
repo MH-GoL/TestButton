@@ -11,13 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
+//import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
+//import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
+//import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
         final Button buttonAlleAus = (Button) findViewById(R.id.buttonAlleAus);
         final Button buttonSunrise = (Button) findViewById(R.id.buttonSunrise);
 
-        final TextView textView = (TextView) findViewById(R.id.textView);
+        //final TextView textView = (TextView) findViewById(R.id.textView);
 
         final SeekBar seekBarRed = (SeekBar) findViewById(R.id.seekBarRed);
         final SeekBar seekBarGreen = (SeekBar) findViewById(R.id.seekBarGreen);
@@ -208,12 +208,6 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    public boolean setButtonBackgroundColor(int buttonId) {
-        final Button button = (Button) findViewById(buttonId);
-        //button.setBackgroundColor();
-        return true;
-    }
-
     private static class ConnectionParam {
         private String host;
         private int port;
@@ -332,8 +326,6 @@ public class MainActivity extends Activity {
             Log.d("onPostExecute", result.toString());
             if (result.getStatus() <= 0) {
                 Toast.makeText(getApplicationContext(), "Controller \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
-            } else {
-
             }
         }
     }
