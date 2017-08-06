@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class MainActivity extends Activity {
         final Button buttonTisch = (Button) findViewById(R.id.buttonTisch);
         final Button buttonBett = (Button) findViewById(R.id.buttonBett);
         final Button buttonAlle = (Button) findViewById(R.id.buttonAlle);
-        final Button buttonDeckenlicht = (Button) findViewById(R.id.buttonDeckenlicht);
+        final ToggleButton buttonDeckenlicht = (ToggleButton) findViewById(R.id.buttonDeckenlicht);
         final Button buttonAlleAus = (Button) findViewById(R.id.buttonAlleAus);
         final Button buttonSunrise = (Button) findViewById(R.id.buttonSunrise);
 
@@ -95,11 +96,11 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d("TEST_BUTTON", "Button pressed");
-                sendLight(true, "lichtschalter.fritz.box");
-                if (buttonDeckenlicht.getDrawingCacheBackgroundColor() == Color.rgb(255,255,255)){
-                    buttonDeckenlicht.setBackgroundColor(Color.rgb(0, 0, 0));
+
+                if (buttonDeckenlicht.isChecked()){
+                    sendLight(true, "lichtschalter.fritz.box");
                 } else {
-                    buttonDeckenlicht.setBackgroundColor(Color.rgb(255, 255, 255));
+                    sendLight(false, "lichtschalter.fritz.box");
                 }
             }
         });
