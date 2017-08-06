@@ -225,9 +225,9 @@ public class MainActivity extends Activity {
 
     public boolean sendLight(boolean switchStatus, String server)
     {
-        LightController ledController = new LightController(server, 80, switchStatus);
+        LightController lightController = new LightController(server, 80, switchStatus);
         LightSocket lightSocket = new LightSocket();
-        lightSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ledController);
+        lightSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, lightController);
         return true;
     }
 
@@ -240,11 +240,11 @@ public class MainActivity extends Activity {
             this.port = port;
         }
 
-        public String getHost() {
+        String getHost() {
             return host;
         }
 
-        public int getPort() {
+        int getPort() {
             return this.port;
         }
     }
@@ -267,31 +267,31 @@ public class MainActivity extends Activity {
 
         }
 
-        public int getRedValue() {
+        int getRedValue() {
             return this.rColor;
         }
 
-        public int getGreenValue() {
+        int getGreenValue() {
             return this.gColor;
         }
 
-        public int getBlueValue() {
+        int getBlueValue() {
             return this.bColor;
         }
 
-        public String getHost() {
+        String getHost() {
             return this.connection.getHost();
         }
 
-        public int getPort() {
+        int getPort() {
             return this.connection.getPort();
         }
 
-        public int getStatus() {
+        int getStatus() {
             return status;
         }
 
-        public void setStatus(int status) {
+        void setStatus(int status) {
             this.status = status;
         }
     }
@@ -412,7 +412,7 @@ public class MainActivity extends Activity {
                         new OutputStreamWriter((mSocket.getOutputStream()))
                 );
 
-                if (!lightController[0].getSwitchStatus())
+                if (lightController[0].getSwitchStatus())
                 {
                     mBufferedWriter.write("GET /AN HTTP/1.1\r\n\r\n");
                 } else {
