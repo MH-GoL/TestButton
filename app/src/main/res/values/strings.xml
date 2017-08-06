@@ -8,4 +8,5 @@
     <string name="button_alle_text">Alle</string>
     <string name="button_alleaus_text">Alle aus</string>
     <string name="button_sunrise_text">Sonnenaufgang</string>
+	<string name="button_deckenlicht_text">Licht</string>
 </resources>
