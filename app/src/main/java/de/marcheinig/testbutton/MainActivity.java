@@ -11,16 +11,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-//import android.widget.TextView;
 import android.widget.Toast;
 
-//import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-//import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+//import android.widget.TextView;
+//import java.io.BufferedReader;
+//import java.io.InputStreamReader;
 
 
 public class MainActivity extends Activity {
@@ -34,6 +35,7 @@ public class MainActivity extends Activity {
         final Button buttonTisch = (Button) findViewById(R.id.buttonTisch);
         final Button buttonBett = (Button) findViewById(R.id.buttonBett);
         final Button buttonAlle = (Button) findViewById(R.id.buttonAlle);
+        final Button buttonDeckenlicht = (Button) findViewById(R.id.buttonDeckenlicht);
         final Button buttonAlleAus = (Button) findViewById(R.id.buttonAlleAus);
         final Button buttonSunrise = (Button) findViewById(R.id.buttonSunrise);
 
@@ -86,6 +88,19 @@ public class MainActivity extends Activity {
                 buttonTisch.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
                 buttonBett.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
                 buttonAlle.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+            }
+        });
+
+        buttonDeckenlicht.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TEST_BUTTON", "Button pressed");
+                sendLight(true, "lichtschalter.fritz.box");
+                if (buttonDeckenlicht.getDrawingCacheBackgroundColor() == Color.rgb(255,255,255)){
+                    buttonDeckenlicht.setBackgroundColor(Color.rgb(0, 0, 0));
+                } else {
+                    buttonDeckenlicht.setBackgroundColor(Color.rgb(255, 255, 255));
+                }
             }
         });
 
@@ -208,6 +223,14 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    public boolean sendLight(boolean switchStatus, String server)
+    {
+        LightController ledController = new LightController(server, 80, switchStatus);
+        LightSocket lightSocket = new LightSocket();
+        lightSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ledController);
+        return true;
+    }
+
     private static class ConnectionParam {
         private String host;
         private int port;
@@ -326,6 +349,102 @@ public class MainActivity extends Activity {
             Log.d("onPostExecute", result.toString());
             if (result.getStatus() <= 0) {
                 Toast.makeText(getApplicationContext(), "Controller \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private static class LightController {
+        ConnectionParam connection;
+
+        private int status;
+        private boolean switchStatus;
+
+        LightController(String host, int port, boolean switchStatus) {
+            this.connection = new ConnectionParam(host, port);
+            this.switchStatus = switchStatus;
+        }
+
+        public boolean getSwitchStatus() {
+            return this.switchStatus;
+        }
+
+        public String getHost() {
+            return this.connection.getHost();
+        }
+
+        public int getPort() {
+            return this.connection.getPort();
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public void setStatus(int status) {
+            this.status = status;
+        }
+    }
+
+    public class LightSocket extends AsyncTask<LightController, Integer, LightController> {
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+
+            //Toast.makeText(getApplicationContext(), "Farbe wird geändert", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected LightController doInBackground(LightController... lightController) {
+            Socket mSocket;
+            //BufferedReader mBufferedReader;
+            BufferedWriter mBufferedWriter;
+            Log.d("doInBackground", "gestartet");
+
+            try {
+                mSocket = new Socket(lightController[0].getHost(), lightController[0].getPort());
+
+
+                //mBufferedReader = new BufferedReader(
+                //        new InputStreamReader(mSocket.getInputStream())
+                //);
+
+                mBufferedWriter = new BufferedWriter(
+                        new OutputStreamWriter((mSocket.getOutputStream()))
+                );
+
+                if (!lightController[0].getSwitchStatus())
+                {
+                    mBufferedWriter.write("GET /AN HTTP/1.1\r\n\r\n");
+                } else {
+                    mBufferedWriter.write("GET /AUS HTTP/1.1\r\n\r\n");
+                }
+
+                mBufferedWriter.flush();
+                mSocket.close();
+                publishProgress(10, 10);
+
+            } catch (UnknownHostException e) {
+                Log.d(lightController[0].getHost() + "-UhE", e.getMessage());
+                lightController[0].setStatus(-1);
+                return lightController[0];
+            } catch (IOException e) {
+                Log.d(lightController[0].getHost() + "-IoE", e.getMessage());
+                lightController[0].setStatus(-2);
+                return lightController[0];
+            } catch (NullPointerException e) {
+                Log.d(lightController[0].getHost() + "-NpE", e.getMessage());
+                lightController[0].setStatus(-3);
+                return lightController[0];
+            }
+            lightController[0].setStatus(1);
+            return lightController[0];
+        }
+
+        @Override
+        protected void onPostExecute(LightController result) {
+            Log.d("onPostExecute", result.toString());
+            if (result.getStatus() <= 0) {
+                Toast.makeText(getApplicationContext(), "LightController \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
             }
         }
     }
