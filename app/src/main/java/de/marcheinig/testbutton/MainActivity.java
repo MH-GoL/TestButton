@@ -1,15 +1,20 @@
 package de.marcheinig.testbutton;
 
-import android.app.*;
-import android.content.*;
-import android.graphics.*;
-import android.os.*;
-import android.util.*;
-import android.view.*;
-import android.widget.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import android.app.Activity;
+import android.app.TimePickerDialog;
+import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 //import android.widget.TextView;
 //import java.io.BufferedReader;
@@ -254,7 +259,7 @@ public class MainActivity extends Activity
 
     public boolean sendColor(int colorR, int colorG, int colorB, String server)
 	{
-        LedController ledController = new LedController(server, 80, colorR, colorG, colorB);
+        LedController ledController = new LedController(server, getApplicationContext(), 80, colorR, colorG, colorB);
         LedSocket ledTischSocket = new LedSocket();
         ledTischSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ledController);
 		return true;
@@ -262,7 +267,7 @@ public class MainActivity extends Activity
 
     public boolean sendLight(boolean switchStatus, String server)
     {
-        LightController lightController = new LightController(server, 80, switchStatus);
+        LightController lightController = new LightController(server, getApplicationContext(), 80, switchStatus);
         LightSocket lightSocket = new LightSocket();
         lightSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, lightController);
         if (lightController.getStatus() < 0)
@@ -275,269 +280,5 @@ public class MainActivity extends Activity
 			Toast.makeText(getApplicationContext(), "True Light", Toast.LENGTH_SHORT);
 			return true;
 		}
-    }
-
-    private static class ConnectionParam
-	{
-        private String host;
-        private int port;
-
-        ConnectionParam(String host, int port)
-		{
-            this.host = host;
-            this.port = port;
-        }
-
-        String getHost()
-		{
-            return host;
-        }
-
-        int getPort()
-		{
-            return this.port;
-        }
-    }
-
-    private static class LedController
-	{
-        ConnectionParam connection;
-
-        private int rColor;
-        private int gColor;
-        private int bColor;
-
-
-        private int status;
-
-        LedController(String host, int port, int r, int g, int b)
-		{
-            this.connection = new ConnectionParam(host, port);
-            this.rColor = r;
-            this.gColor = g;
-            this.bColor = b;
-
-        }
-
-        int getRedValue()
-		{
-            return this.rColor;
-        }
-
-        int getGreenValue()
-		{
-            return this.gColor;
-        }
-
-        int getBlueValue()
-		{
-            return this.bColor;
-        }
-
-        String getHost()
-		{
-            return this.connection.getHost();
-        }
-
-        int getPort()
-		{
-            return this.connection.getPort();
-        }
-
-        int getStatus()
-		{
-            return status;
-        }
-
-        void setStatus(int status)
-		{
-            this.status = status;
-        }
-    }
-
-    public class LedSocket extends AsyncTask<LedController, Integer, LedController>
-	{
-
-        @Override
-        protected void onProgressUpdate(Integer... progress)
-		{
-
-            //Toast.makeText(getApplicationContext(), "Farbe wird geändert", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected LedController doInBackground(LedController... ledController)
-		{
-            Socket mSocket;
-            //BufferedReader mBufferedReader;
-            BufferedWriter mBufferedWriter;
-            Log.d("doInBackground", "gestartet");
-
-            try
-			{
-                mSocket = new Socket(ledController[0].getHost(), ledController[0].getPort());
-
-
-                //mBufferedReader = new BufferedReader(
-                //        new InputStreamReader(mSocket.getInputStream())
-                //);
-
-                mBufferedWriter = new BufferedWriter(
-					new OutputStreamWriter((mSocket.getOutputStream()))
-                );
-                mBufferedWriter.write("GET /rgb?r=" + ledController[0].getRedValue() + "&g=" + ledController[0].getGreenValue() + "&b=" + ledController[0].getBlueValue() + " HTTP/1.1\r\n\r\n");
-                mBufferedWriter.flush();
-                mSocket.close();
-                publishProgress(10, 10);
-
-            }
-			catch (UnknownHostException e)
-			{
-                Log.d(ledController[0].getHost() + "-UhE", e.getMessage());
-                ledController[0].setStatus(-1);
-                return ledController[0];
-            }
-			catch (IOException e)
-			{
-                Log.d(ledController[0].getHost() + "-IoE", e.getMessage());
-                ledController[0].setStatus(-2);
-                return ledController[0];
-            }
-			catch (NullPointerException e)
-			{
-                Log.d(ledController[0].getHost() + "-NpE", e.getMessage());
-                ledController[0].setStatus(-3);
-                return ledController[0];
-            }
-            ledController[0].setStatus(1);
-            return ledController[0];
-        }
-
-        @Override
-        protected void onPostExecute(LedController result)
-		{
-            Log.d("onPostExecute", result.toString());
-            if (result.getStatus() <= 0)
-			{
-                Toast.makeText(getApplicationContext(), "Controller \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    public static class LightController
-	{
-        ConnectionParam connection;
-
-        private int status;
-        private boolean switchStatus;
-
-        LightController(String host, int port, boolean switchStatus)
-		{
-            this.connection = new ConnectionParam(host, port);
-            this.switchStatus = switchStatus;
-        }
-
-        public boolean getSwitchStatus()
-		{
-            return this.switchStatus;
-        }
-
-        public String getHost()
-		{
-            return this.connection.getHost();
-        }
-
-        public int getPort()
-		{
-            return this.connection.getPort();
-        }
-
-        public int getStatus()
-		{
-            return status;
-        }
-
-        public void setStatus(int status)
-		{
-            this.status = status;
-        }
-    }
-
-    public class LightSocket extends AsyncTask<LightController, Integer, LightController>
-	{
-
-        @Override
-        protected void onProgressUpdate(Integer... progress)
-		{
-
-            //Toast.makeText(getApplicationContext(), "Farbe wird geändert", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected LightController doInBackground(LightController... lightController)
-		{
-            Socket mSocket;
-            //BufferedReader mBufferedReader;
-            BufferedWriter mBufferedWriter;
-            Log.d("doInBackground", "gestartet");
-
-            try
-			{
-                mSocket = new Socket(lightController[0].getHost(), lightController[0].getPort());
-
-
-                //mBufferedReader = new BufferedReader(
-                //        new InputStreamReader(mSocket.getInputStream())
-                //);
-
-                mBufferedWriter = new BufferedWriter(
-					new OutputStreamWriter((mSocket.getOutputStream()))
-                );
-
-                if (lightController[0].getSwitchStatus())
-                {
-                    mBufferedWriter.write("GET /AN HTTP/1.1\r\n\r\n");
-                }
-				else
-				{
-                    mBufferedWriter.write("GET /AUS HTTP/1.1\r\n\r\n");
-                }
-
-                mBufferedWriter.flush();
-                mSocket.close();
-                publishProgress(10, 10);
-
-            }
-			catch (UnknownHostException e)
-			{
-                Log.d(lightController[0].getHost() + "-UhE", e.getMessage());
-                lightController[0].setStatus(-1);
-                return lightController[0];
-            }
-			catch (IOException e)
-			{
-                Log.d(lightController[0].getHost() + "-IoE", e.getMessage());
-                lightController[0].setStatus(-2);
-                return lightController[0];
-            }
-			catch (NullPointerException e)
-			{
-                Log.d(lightController[0].getHost() + "-NpE", e.getMessage());
-                lightController[0].setStatus(-3);
-                return lightController[0];
-            }
-            lightController[0].setStatus(1);
-            return lightController[0];
-        }
-
-        @Override
-        protected void onPostExecute(LightController result)
-		{
-            Log.d("onPostExecute", result.toString());
-            if (result.getStatus() <= 0)
-			{
-                Toast.makeText(getApplicationContext(), "LightController \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }
