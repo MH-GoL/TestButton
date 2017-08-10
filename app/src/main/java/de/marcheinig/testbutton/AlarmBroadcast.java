@@ -31,8 +31,9 @@ public class AlarmBroadcast extends BroadcastReceiver {
 		Format formatter = new SimpleDateFormat("HH:mm:ss");
 		msgStr.append(formatter.format(new Date()));
 		
-		sendLight(context, true, "lichtschalter.fritz.box");
-		
+		//sendLight(context, true, "lichtschalter.fritz.box");
+		sendColor(context,255,0,0,"ledregal.fritz.box");
+		sendColor(context,255,0,0,"ledtisch.fritz.box");
 		Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
 
 		//Release the lock
@@ -91,5 +92,13 @@ public class AlarmBroadcast extends BroadcastReceiver {
 			Toast.makeText(context, "True Light", Toast.LENGTH_SHORT);
 			return true;
 		}
+	}
+
+	public boolean sendColor(Context context, int colorR, int colorG, int colorB, String server)
+	{
+		LedController ledController = new LedController(server, context, 80, colorR, colorG, colorB);
+		LedSocket ledTischSocket = new LedSocket();
+		ledTischSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ledController);
+		return true;
 	}
 }
