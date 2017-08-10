@@ -1,14 +1,18 @@
 package de.marcheinig.testbutton;
 
-import de.marcheinig.testbutton.MainActivity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.PowerManager;
+import android.widget.Toast;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
-import android.widget.*;
-import java.text.*;
-import java.util.*;
-import android.util.*;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class AlarmBroadcast extends BroadcastReceiver {
 
@@ -27,8 +31,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
 		Format formatter = new SimpleDateFormat("HH:mm:ss");
 		msgStr.append(formatter.format(new Date()));
 		
-		MainActivity mainAct = new MainActivity();
-		mainAct.sendLight(true, "lichtschalter.fritz.box");
+		sendLight(context, true, "lichtschalter.fritz.box");
 		
 		Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
 
@@ -72,4 +75,21 @@ public class AlarmBroadcast extends BroadcastReceiver {
 		Toast.makeText(context,formatter.format(timeOff9.getTime()),Toast.LENGTH_SHORT).show();
         am.set(AlarmManager.RTC_WAKEUP, timeOff9.getTimeInMillis(), pi);
     }
+
+	public boolean sendLight(Context context, boolean switchStatus, String server)
+	{
+		LightController lightController = new LightController(server, context, 80, switchStatus);
+		LightSocket lightSocket = new LightSocket();
+		lightSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, lightController);
+		if (lightController.getStatus() < 0)
+		{
+			Toast.makeText(context, "False Light", Toast.LENGTH_SHORT);
+			return false;
+		}
+		else
+		{
+			Toast.makeText(context, "True Light", Toast.LENGTH_SHORT);
+			return true;
+		}
+	}
 }
