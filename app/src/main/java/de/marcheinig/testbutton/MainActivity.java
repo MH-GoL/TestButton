@@ -1,36 +1,32 @@
 package de.marcheinig.testbutton;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import android.app.*;
+import android.content.*;
+import android.graphics.*;
+import android.os.*;
+import android.util.*;
+import android.view.*;
+import android.widget.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 //import android.widget.TextView;
 //import java.io.BufferedReader;
 //import java.io.InputStreamReader;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity
+{
+	private AlarmBroadcast alarm;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+		alarm = new AlarmBroadcast();
 
         final Button buttonRegal = (Button) findViewById(R.id.buttonRegal);
         final Button buttonTisch = (Button) findViewById(R.id.buttonTisch);
@@ -49,179 +45,219 @@ public class MainActivity extends Activity {
         final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 
         buttonRegal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TEST_BUTTON", "Button pressed");
-                sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
-                buttonRegal.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
-            }
-        });
+				@Override
+				public void onClick(View v)
+				{
+					Log.d("TEST_BUTTON", "Button pressed");
+					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
+					buttonRegal.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+					buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
+				}
+			});
 
         buttonTisch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TEST_BUTTON", "Button pressed");
-                sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
-                buttonTisch.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
-            }
-        });
+				@Override
+				public void onClick(View v)
+				{
+					Log.d("TEST_BUTTON", "Button pressed");
+					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
+					buttonTisch.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+					buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
+				}
+			});
 
         buttonBett.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TEST_BUTTON", "Button pressed");
-                sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
-                buttonBett.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
-            }
-        });
+				@Override
+				public void onClick(View v)
+				{
+					Log.d("TEST_BUTTON", "Button pressed");
+					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
+					buttonBett.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+					buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
+				}
+			});
 
         buttonAlle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
-                sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
-                sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
+				@Override
+				public void onClick(View v)
+				{
+					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
+					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
+					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
 
-                buttonRegal.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                buttonTisch.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                buttonBett.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                buttonAlle.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-            }
-        });
+					buttonRegal.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+					buttonTisch.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+					buttonBett.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+					buttonAlle.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+				}
+			});
 
         buttonDeckenlicht.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TEST_BUTTON", "Button pressed");
+				@Override
+				public void onClick(View v)
+				{
+					Log.d("TEST_BUTTON", "Button pressed");
 
-                if (buttonDeckenlicht.isChecked()){
-                    sendLight(true, "lichtschalter.fritz.box");
-                } else {
-                    sendLight(false, "lichtschalter.fritz.box");
-                }
-            }
-        });
+					if (buttonDeckenlicht.isChecked())
+					{
+						if (!sendLight(true, "lichtschalter.fritz.box")) buttonDeckenlicht.setChecked(false);
+					}
+					else
+					{
+						if (!sendLight(false, "lichtschalter.fritz.box")) buttonDeckenlicht.setChecked(true);
+					}
+				}
+			});
 
         buttonAlleAus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendColor(0, 0, 0, "ledregal.fritz.box");
-                sendColor(0, 0, 0, "ledtisch.fritz.box");
-                sendColor(0, 0, 0, "ledbett.fritz.box");
+				@Override
+				public void onClick(View v)
+				{
+					sendColor(0, 0, 0, "ledregal.fritz.box");
+					sendColor(0, 0, 0, "ledtisch.fritz.box");
+					sendColor(0, 0, 0, "ledbett.fritz.box");
+					sendLight(false, "lichtschalter.fritz.box");
 
-                buttonRegal.setBackgroundColor(Color.rgb(0, 0, 0));
-                buttonTisch.setBackgroundColor(Color.rgb(0, 0, 0));
-                buttonBett.setBackgroundColor(Color.rgb(0, 0, 0));
-                buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
-            }
-        });
+					buttonRegal.setBackgroundColor(Color.rgb(0, 0, 0));
+					buttonTisch.setBackgroundColor(Color.rgb(0, 0, 0));
+					buttonBett.setBackgroundColor(Color.rgb(0, 0, 0));
+					buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
+					buttonDeckenlicht.setChecked(false);
+				}
+			});
 
         buttonSunrise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TEST_BUTTON", "Test-Button-gedrückt");
-                sendColor(255, 255, 255, "ledtisch.fritz.box");
-                Log.d("SUNRISE", Integer.toString(R.id.buttonSunrise));
+				@Override
+				public void onClick(View v)
+				{
+					Log.d("TEST_BUTTON", "Test-Button-gedrückt");
+					sendColor(255, 255, 255, "ledtisch.fritz.box");
+					Log.d("SUNRISE", Integer.toString(R.id.buttonSunrise));
 
-            }
-        });
+				}
+			});
 
         seekBarRed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mainLayout.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                        //sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress());
-                    }
-                });
-            }
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+				{
+					runOnUiThread(new Runnable() {
+							@Override
+							public void run()
+							{
+								mainLayout.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+								//sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress());
+							}
+						});
+				}
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar)
+				{
 
-            }
+				}
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar)
+				{
 
-            }
-        });
-        seekBarGreen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mainLayout.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                    }
-                });
-            }
+				}
+			});
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+		seekBarGreen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+				{
+					runOnUiThread(new Runnable() {
+							@Override
+							public void run()
+							{
+								mainLayout.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+							}
+						});
+				}
 
-            }
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar)
+				{
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+				}
 
-            }
-        });
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar)
+				{
+
+				}
+			});
+
         seekBarBlue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mainLayout.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
-                    }
-                });
-            }
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+				{
+					runOnUiThread(new Runnable() {
+							@Override
+							public void run()
+							{
+								mainLayout.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
+							}
+						});
+				}
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar)
+				{
 
-            }
+				}
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar)
+				{
 
-            }
-        });
+				}
+			});
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+	{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+	{
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_settings)
+		{
+
+			TimePickerDialog Tp = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+					@Override
+					public void onTimeSet(TimePicker view, int hourOfDay, int minute)
+					{
+						alarm.setOnetimeTimer(getApplicationContext(), hourOfDay, minute);
+						Log.d("Time", hourOfDay + ":" + minute);
+					}
+				}, 4, 30, true);
+			Tp.show();
+			return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean sendColor(int colorR, int colorG, int colorB, String server) {
+    public boolean sendColor(int colorR, int colorG, int colorB, String server)
+	{
         LedController ledController = new LedController(server, 80, colorR, colorG, colorB);
         LedSocket ledTischSocket = new LedSocket();
         ledTischSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ledController);
-        return true;
+		return true;
     }
 
     public boolean sendLight(boolean switchStatus, String server)
@@ -229,28 +265,42 @@ public class MainActivity extends Activity {
         LightController lightController = new LightController(server, 80, switchStatus);
         LightSocket lightSocket = new LightSocket();
         lightSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, lightController);
-        return true;
+        if (lightController.getStatus() < 0)
+		{
+			Toast.makeText(getApplicationContext(), "False Light", Toast.LENGTH_SHORT);
+			return false;
+		}
+		else
+		{
+			Toast.makeText(getApplicationContext(), "True Light", Toast.LENGTH_SHORT);
+			return true;
+		}
     }
 
-    private static class ConnectionParam {
+    private static class ConnectionParam
+	{
         private String host;
         private int port;
 
-        ConnectionParam(String host, int port) {
+        ConnectionParam(String host, int port)
+		{
             this.host = host;
             this.port = port;
         }
 
-        String getHost() {
+        String getHost()
+		{
             return host;
         }
 
-        int getPort() {
+        int getPort()
+		{
             return this.port;
         }
     }
 
-    private static class LedController {
+    private static class LedController
+	{
         ConnectionParam connection;
 
         private int rColor;
@@ -260,7 +310,8 @@ public class MainActivity extends Activity {
 
         private int status;
 
-        LedController(String host, int port, int r, int g, int b) {
+        LedController(String host, int port, int r, int g, int b)
+		{
             this.connection = new ConnectionParam(host, port);
             this.rColor = r;
             this.gColor = g;
@@ -268,51 +319,62 @@ public class MainActivity extends Activity {
 
         }
 
-        int getRedValue() {
+        int getRedValue()
+		{
             return this.rColor;
         }
 
-        int getGreenValue() {
+        int getGreenValue()
+		{
             return this.gColor;
         }
 
-        int getBlueValue() {
+        int getBlueValue()
+		{
             return this.bColor;
         }
 
-        String getHost() {
+        String getHost()
+		{
             return this.connection.getHost();
         }
 
-        int getPort() {
+        int getPort()
+		{
             return this.connection.getPort();
         }
 
-        int getStatus() {
+        int getStatus()
+		{
             return status;
         }
 
-        void setStatus(int status) {
+        void setStatus(int status)
+		{
             this.status = status;
         }
     }
 
-    public class LedSocket extends AsyncTask<LedController, Integer, LedController> {
+    public class LedSocket extends AsyncTask<LedController, Integer, LedController>
+	{
 
         @Override
-        protected void onProgressUpdate(Integer... progress) {
+        protected void onProgressUpdate(Integer... progress)
+		{
 
             //Toast.makeText(getApplicationContext(), "Farbe wird geändert", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        protected LedController doInBackground(LedController... ledController) {
+        protected LedController doInBackground(LedController... ledController)
+		{
             Socket mSocket;
             //BufferedReader mBufferedReader;
             BufferedWriter mBufferedWriter;
             Log.d("doInBackground", "gestartet");
 
-            try {
+            try
+			{
                 mSocket = new Socket(ledController[0].getHost(), ledController[0].getPort());
 
 
@@ -321,22 +383,28 @@ public class MainActivity extends Activity {
                 //);
 
                 mBufferedWriter = new BufferedWriter(
-                        new OutputStreamWriter((mSocket.getOutputStream()))
+					new OutputStreamWriter((mSocket.getOutputStream()))
                 );
                 mBufferedWriter.write("GET /rgb?r=" + ledController[0].getRedValue() + "&g=" + ledController[0].getGreenValue() + "&b=" + ledController[0].getBlueValue() + " HTTP/1.1\r\n\r\n");
                 mBufferedWriter.flush();
                 mSocket.close();
                 publishProgress(10, 10);
 
-            } catch (UnknownHostException e) {
+            }
+			catch (UnknownHostException e)
+			{
                 Log.d(ledController[0].getHost() + "-UhE", e.getMessage());
                 ledController[0].setStatus(-1);
                 return ledController[0];
-            } catch (IOException e) {
+            }
+			catch (IOException e)
+			{
                 Log.d(ledController[0].getHost() + "-IoE", e.getMessage());
                 ledController[0].setStatus(-2);
                 return ledController[0];
-            } catch (NullPointerException e) {
+            }
+			catch (NullPointerException e)
+			{
                 Log.d(ledController[0].getHost() + "-NpE", e.getMessage());
                 ledController[0].setStatus(-3);
                 return ledController[0];
@@ -346,62 +414,75 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(LedController result) {
+        protected void onPostExecute(LedController result)
+		{
             Log.d("onPostExecute", result.toString());
-            if (result.getStatus() <= 0) {
+            if (result.getStatus() <= 0)
+			{
                 Toast.makeText(getApplicationContext(), "Controller \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private static class LightController {
+    public static class LightController
+	{
         ConnectionParam connection;
 
         private int status;
         private boolean switchStatus;
 
-        LightController(String host, int port, boolean switchStatus) {
+        LightController(String host, int port, boolean switchStatus)
+		{
             this.connection = new ConnectionParam(host, port);
             this.switchStatus = switchStatus;
         }
 
-        public boolean getSwitchStatus() {
+        public boolean getSwitchStatus()
+		{
             return this.switchStatus;
         }
 
-        public String getHost() {
+        public String getHost()
+		{
             return this.connection.getHost();
         }
 
-        public int getPort() {
+        public int getPort()
+		{
             return this.connection.getPort();
         }
 
-        public int getStatus() {
+        public int getStatus()
+		{
             return status;
         }
 
-        public void setStatus(int status) {
+        public void setStatus(int status)
+		{
             this.status = status;
         }
     }
 
-    public class LightSocket extends AsyncTask<LightController, Integer, LightController> {
+    public class LightSocket extends AsyncTask<LightController, Integer, LightController>
+	{
 
         @Override
-        protected void onProgressUpdate(Integer... progress) {
+        protected void onProgressUpdate(Integer... progress)
+		{
 
             //Toast.makeText(getApplicationContext(), "Farbe wird geändert", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        protected LightController doInBackground(LightController... lightController) {
+        protected LightController doInBackground(LightController... lightController)
+		{
             Socket mSocket;
             //BufferedReader mBufferedReader;
             BufferedWriter mBufferedWriter;
             Log.d("doInBackground", "gestartet");
 
-            try {
+            try
+			{
                 mSocket = new Socket(lightController[0].getHost(), lightController[0].getPort());
 
 
@@ -410,13 +491,15 @@ public class MainActivity extends Activity {
                 //);
 
                 mBufferedWriter = new BufferedWriter(
-                        new OutputStreamWriter((mSocket.getOutputStream()))
+					new OutputStreamWriter((mSocket.getOutputStream()))
                 );
 
                 if (lightController[0].getSwitchStatus())
                 {
                     mBufferedWriter.write("GET /AN HTTP/1.1\r\n\r\n");
-                } else {
+                }
+				else
+				{
                     mBufferedWriter.write("GET /AUS HTTP/1.1\r\n\r\n");
                 }
 
@@ -424,15 +507,21 @@ public class MainActivity extends Activity {
                 mSocket.close();
                 publishProgress(10, 10);
 
-            } catch (UnknownHostException e) {
+            }
+			catch (UnknownHostException e)
+			{
                 Log.d(lightController[0].getHost() + "-UhE", e.getMessage());
                 lightController[0].setStatus(-1);
                 return lightController[0];
-            } catch (IOException e) {
+            }
+			catch (IOException e)
+			{
                 Log.d(lightController[0].getHost() + "-IoE", e.getMessage());
                 lightController[0].setStatus(-2);
                 return lightController[0];
-            } catch (NullPointerException e) {
+            }
+			catch (NullPointerException e)
+			{
                 Log.d(lightController[0].getHost() + "-NpE", e.getMessage());
                 lightController[0].setStatus(-3);
                 return lightController[0];
@@ -442,9 +531,11 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(LightController result) {
+        protected void onPostExecute(LightController result)
+		{
             Log.d("onPostExecute", result.toString());
-            if (result.getStatus() <= 0) {
+            if (result.getStatus() <= 0)
+			{
                 Toast.makeText(getApplicationContext(), "LightController \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
             }
         }

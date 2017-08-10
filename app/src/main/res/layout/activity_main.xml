@@ -105,7 +105,7 @@
 		android:layout_centerHorizontal="true"
 		android:text="@string/button_deckenlicht_text"
 		android:textOff="Aus"
-		android:textOn="An" />
+		android:textOn="An"/>
 
 </RelativeLayout>
 
