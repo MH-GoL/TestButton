@@ -76,13 +76,12 @@ public class AlarmBroadcast extends BroadcastReceiver {
 		
 		if(timeOff9.getTimeInMillis() < System.currentTimeMillis())
 		{
-			Toast.makeText(context,"Wecker für nächsten Tag: " + formatter.format(timeOff9.getTime()),Toast.LENGTH_SHORT).show();
+			Toast.makeText(context,"@string/button_alleaus_text" + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
 			timeOff9.setTimeInMillis(timeOff9.getTimeInMillis()+24*60*60*1000);
 		} else {
-			Toast.makeText(context,"Wecker für heute",Toast.LENGTH_SHORT).show();
+			Toast.makeText(context,"Wecker für Heute: " + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
 		}
 			
-		Toast.makeText(context,formatter.format(timeOff9.getTime()),Toast.LENGTH_SHORT).show();
         am.set(AlarmManager.RTC_WAKEUP, timeOff9.getTimeInMillis(), pi);
     }
 
@@ -106,8 +105,8 @@ public class AlarmBroadcast extends BroadcastReceiver {
 	public boolean sendColor(Context context, int colorR, int colorG, int colorB, String server)
 	{
 		LedController ledController = new LedController(server, context, 80, colorR, colorG, colorB);
-		LedSocket ledTischSocket = new LedSocket();
-		ledTischSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ledController);
+		LedSocket ledSocket = new LedSocket();
+		ledSocket.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ledController);
 		return true;
 	}
 }
