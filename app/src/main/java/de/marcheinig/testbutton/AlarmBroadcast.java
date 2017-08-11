@@ -76,7 +76,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
 		
 		if(timeOff9.getTimeInMillis() < System.currentTimeMillis())
 		{
-			Toast.makeText(context,"@string/button_alleaus_text" + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context,R.string.toast_alarm_tomorrow + " " + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
 			timeOff9.setTimeInMillis(timeOff9.getTimeInMillis()+24*60*60*1000);
 		} else {
 			Toast.makeText(context,"Wecker für Heute: " + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
