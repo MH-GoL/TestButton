@@ -1,18 +1,11 @@
 package de.marcheinig.testbutton;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.PowerManager;
-import android.widget.Toast;
-
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import android.app.*;
+import android.content.*;
+import android.os.*;
+import android.widget.*;
+import java.text.*;
+import java.util.*;
 
 public class AlarmBroadcast extends BroadcastReceiver {
 
@@ -26,8 +19,10 @@ public class AlarmBroadcast extends BroadcastReceiver {
 
 		//You can do the processing here update the widget/remote views.
 		StringBuilder msgStr = new StringBuilder();
-		msgStr.append("Fucker: ");
-
+		//msgStr.append("Fucker: ");
+		msgStr.append("Fucker");
+		msgStr.append(intent.getIntExtra("Test",0));
+		msgStr.append(": ");
 		Format formatter = new SimpleDateFormat("HH:mm:ss");
 		msgStr.append(formatter.format(new Date()));
 		
@@ -62,7 +57,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
     public void setOnetimeTimer(Context context, int hour, int minute){
     	AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmBroadcast.class);
-        intent.putExtra(ONE_TIME, Boolean.TRUE);
+        intent.putExtra("Test", 1);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 
 		Calendar timeOff9 = Calendar.getInstance();
@@ -76,7 +71,9 @@ public class AlarmBroadcast extends BroadcastReceiver {
 		
 		if(timeOff9.getTimeInMillis() < System.currentTimeMillis())
 		{
-			Toast.makeText(context,R.string.toast_alarm_tomorrow + " " + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
+			
+			String textTomorrow = context.getString(R.string.toast_alarm_tomorrow);
+			Toast.makeText(context,textTomorrow + " " + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
 			timeOff9.setTimeInMillis(timeOff9.getTimeInMillis()+24*60*60*1000);
 		} else {
 			Toast.makeText(context,"Wecker für Heute: " + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
