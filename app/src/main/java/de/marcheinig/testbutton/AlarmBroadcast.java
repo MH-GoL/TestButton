@@ -31,10 +31,10 @@ public class AlarmBroadcast extends BroadcastReceiver {
 		Format formatter = new SimpleDateFormat("HH:mm:ss");
 		msgStr.append(formatter.format(new Date()));
 		
-		//sendLight(context, true, "lichtschalter.fritz.box");
-		sendColor(context,1024,0,1024,"ledregal.fritz.box");
-		sendColor(context,1024,0,1024,"ledtisch.fritz.box");
-		sendColor(context,1024,0,1024,"ledbett.fritz.box");
+		sendLight(context, true, "lichtschalter.fritz.box");
+		//sendColor(context,1024,0,1024,"ledregal.fritz.box");
+		//sendColor(context,1024,0,1024,"ledtisch.fritz.box");
+		//sendColor(context,1024,0,1024,"ledbett.fritz.box");
 		Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
 
 		//Release the lock
@@ -76,7 +76,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
 		
 		if(timeOff9.getTimeInMillis() < System.currentTimeMillis())
 		{
-			Toast.makeText(context,"@string/toast_alarm_tomorrow" + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context,R.string.toast_alarm_tomorrow + " " + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();
 			timeOff9.setTimeInMillis(timeOff9.getTimeInMillis()+24*60*60*1000);
 		} else {
 			Toast.makeText(context,"Wecker für Heute: " + formatter.format(timeOff9.getTime()), Toast.LENGTH_SHORT).show();

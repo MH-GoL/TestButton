@@ -1,5 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+    <item android:id="@+id/action_alarm" android:title="@string/action_alarm_text"
+        android:orderInCategory="100" android:showAsAction="never" />
+    <item android:id="@+id/action_alarm_4_00_led" android:title="@string/action_alarm_4_00_led_text"
+        android:orderInCategory="100" android:showAsAction="never" />
+    <item android:id="@+id/action_alarm_4_00_light" android:title="@string/action_alarm_4_00_light_text"
         android:orderInCategory="100" android:showAsAction="never" />
 </menu>

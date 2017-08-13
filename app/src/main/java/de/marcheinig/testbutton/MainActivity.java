@@ -239,9 +239,8 @@ public class MainActivity extends Activity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
+        if (id == R.id.action_alarm)
 		{
-
 			TimePickerDialog Tp = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
 					@Override
 					public void onTimeSet(TimePicker view, int hourOfDay, int minute)
@@ -253,6 +252,14 @@ public class MainActivity extends Activity
 			Tp.show();
 			return true;
         }
+			else if (id == R.id.action_alarm_4_00_led)
+		{
+			alarm.setOnetimeTimer(getApplicationContext(), 4, 0);
+		}
+			else if  (id == R.id.action_alarm_4_00_light)
+		{
+			alarm.setOnetimeTimer(getApplicationContext(), 4, 0);
+		}
 
         return super.onOptionsItemSelected(item);
     }
