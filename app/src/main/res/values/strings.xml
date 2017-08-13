@@ -1,13 +1,16 @@
 <resources>
     <string name="app_name">TestButton</string>
     <string name="title">Let there be Light!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_alarm_text">Alarm</string>
+    <string name="action_alarm_4_00_led_text">Alarm 4:00 mit LED</string>
+    <string name="action_alarm_4_00_light_text">Alarm 4:00 mit Decke</string>
     <string name="button_regal_text">Regal</string>
     <string name="button_tisch_text">Tisch</string>
     <string name="button_bett_text">Bett</string>
     <string name="button_alle_text">Alle</string>
     <string name="button_alleaus_text">Alle aus</string>
     <string name="button_sunrise_text">Sonnenaufgang</string>
+    <string name="button_deckenlicht_text">Licht</string>
 	<string name="toast_alarm_today">Wecker für heute: </string>
     <string name="toast_alarm_tomorrow">Wecker für morgen: </string>
 </resources>
