@@ -8,6 +8,7 @@
     <string name="button_alle_text">Alle</string>
     <string name="button_alleaus_text">Alle aus</string>
     <string name="button_sunrise_text">Sonnenaufgang</string>
+	<string name="button_deckenlicht_text">Licht</string>
 	<string name="toast_alarm_today">Wecker für heute: </string>
     <string name="toast_alarm_tomorrow">Wecker für morgen: </string>
 </resources>
