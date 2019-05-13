@@ -76,5 +76,9 @@ public class LedSocket extends AsyncTask<LedController, Integer, LedController>
         {
             Toast.makeText(result.getContext(), "Controller \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
         }
+		else
+		{
+			Toast.makeText(result.getContext(), "Controller \"" + result.getHost() + "\" ist nicht erreichbar!", Toast.LENGTH_SHORT).show();
+		}
     }
 }

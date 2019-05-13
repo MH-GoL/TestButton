@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.*;
 
 //import android.widget.TextView;
 //import java.io.BufferedReader;
@@ -38,6 +39,7 @@ public class MainActivity extends Activity
         final Button buttonBett = (Button) findViewById(R.id.buttonBett);
         final Button buttonAlle = (Button) findViewById(R.id.buttonAlle);
         final ToggleButton buttonDeckenlicht = (ToggleButton) findViewById(R.id.buttonDeckenlicht);
+        final ToggleButton buttonLicht2 = (ToggleButton) findViewById(R.id.buttonLicht2);
         final Button buttonAlleAus = (Button) findViewById(R.id.buttonAlleAus);
         final Button buttonSunrise = (Button) findViewById(R.id.buttonSunrise);
 
@@ -47,14 +49,14 @@ public class MainActivity extends Activity
         final SeekBar seekBarGreen = (SeekBar) findViewById(R.id.seekBarGreen);
         final SeekBar seekBarBlue = (SeekBar) findViewById(R.id.seekBarBlue);
 
-        final RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
+        final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 
         buttonRegal.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v)
 				{
 					Log.d("TEST_BUTTON", "Button pressed");
-					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
+					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "192.168.43.88");
 					buttonRegal.setBackgroundColor(Color.rgb(seekBarRed.getProgress() / 4, seekBarGreen.getProgress() / 4, seekBarBlue.getProgress() / 4));
 					buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
 				}
@@ -86,7 +88,7 @@ public class MainActivity extends Activity
 				@Override
 				public void onClick(View v)
 				{
-					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledregal.fritz.box");
+					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "192.168.43.88");
 					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledtisch.fritz.box");
 					sendColor(seekBarRed.getProgress(), seekBarGreen.getProgress(), seekBarBlue.getProgress(), "ledbett.fritz.box");
 
@@ -97,7 +99,24 @@ public class MainActivity extends Activity
 				}
 			});
 
-        buttonDeckenlicht.setOnClickListener(new View.OnClickListener() {
+		buttonLicht2.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v)
+				{
+					Log.d("TEST_BUTTON", "Button pressed");
+
+					if (buttonLicht2.isChecked())
+					{
+						if (!sendLight(true, "lichtneu.fritz.box")) buttonLicht2.setChecked(false);
+					}
+					else
+					{
+						if (!sendLight(false, "lichtneu.fritz.box")) buttonLicht2.setChecked(true);
+					}
+				}
+			});
+			
+		buttonDeckenlicht.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v)
 				{
@@ -105,11 +124,11 @@ public class MainActivity extends Activity
 
 					if (buttonDeckenlicht.isChecked())
 					{
-						if (!sendLight(true, "lichtschalter.fritz.box")) buttonDeckenlicht.setChecked(false);
+						if (!sendLight(true, "switch2.fritz.box")) buttonDeckenlicht.setChecked(false);
 					}
 					else
 					{
-						if (!sendLight(false, "lichtschalter.fritz.box")) buttonDeckenlicht.setChecked(true);
+						if (!sendLight(false, "switch2.fritz.box")) buttonDeckenlicht.setChecked(true);
 					}
 				}
 			});
@@ -118,16 +137,19 @@ public class MainActivity extends Activity
 				@Override
 				public void onClick(View v)
 				{
-					sendColor(0, 0, 0, "ledregal.fritz.box");
+					sendColor(0, 0, 0, "192.168.43.88");
 					sendColor(0, 0, 0, "ledtisch.fritz.box");
 					sendColor(0, 0, 0, "ledbett.fritz.box");
-					sendLight(false, "lichtschalter.fritz.box");
+					sendLight(false, "lichtneu.fritz.box");
+					sendLight(false, "switch2.fritz.box");
+					
 
 					buttonRegal.setBackgroundColor(Color.rgb(0, 0, 0));
 					buttonTisch.setBackgroundColor(Color.rgb(0, 0, 0));
 					buttonBett.setBackgroundColor(Color.rgb(0, 0, 0));
 					buttonAlle.setBackgroundColor(Color.rgb(0, 0, 0));
 					buttonDeckenlicht.setChecked(false);
+					buttonLicht2.setChecked(false);
 				}
 			});
 
@@ -258,7 +280,7 @@ public class MainActivity extends Activity
 		}
 			else if  (id == R.id.action_alarm_4_00_light)
 		{
-			alarm.setOnetimeTimer(getApplicationContext(), 4, 0);
+			alarm.setOnetimeTimer(getApplicationContext(), 4, 40);
 		}
 
         return super.onOptionsItemSelected(item);

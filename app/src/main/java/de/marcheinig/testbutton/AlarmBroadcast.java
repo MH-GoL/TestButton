@@ -26,7 +26,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
 		Format formatter = new SimpleDateFormat("HH:mm:ss");
 		msgStr.append(formatter.format(new Date()));
 		
-		sendLight(context, true, "lichtschalter.fritz.box");
+		sendLight(context, true, "switch2.fritz.box");
 		//sendColor(context,1024,0,1024,"ledregal.fritz.box");
 		//sendColor(context,1024,0,1024,"ledtisch.fritz.box");
 		//sendColor(context,1024,0,1024,"ledbett.fritz.box");

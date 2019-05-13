@@ -4,8 +4,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -20,8 +23,7 @@ public class LightSocket extends AsyncTask<LightController, Integer, LightContro
     @Override
     protected void onProgressUpdate(Integer... progress)
     {
-
-        //Toast.makeText(getApplicationContext(), "Farbe wird geändert", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(LightController., "Farbe wird geändert", Toast.LENGTH_SHORT).show();
     }
 
     @Override
